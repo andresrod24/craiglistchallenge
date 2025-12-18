@@ -1,0 +1,27 @@
+// Carbon Design System Styles
+@use '@carbon/react';
+
+// Reset and base styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// App container
+#root {
+  min-height: 100vh;
+}
+
+// Custom Carbon overrides
+.cds--header__name {
+  padding-right: 0px;
+}
