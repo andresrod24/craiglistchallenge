@@ -89,7 +89,7 @@ function Step3Description({ formData, updateFormData }) {
           fontSize: '1.25rem', 
           fontWeight: 400, 
           lineHeight: '28px',
-          marginBottom: '0.5rem' 
+          marginBottom: 'var(--cds-spacing-03)' 
         }}>
           Describe your service
         </h2>
@@ -106,18 +106,23 @@ function Step3Description({ formData, updateFormData }) {
       </div>
 
       {/* Progress Indicator */}
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '0.5rem',
-        padding: '0.75rem 1rem',
-        backgroundColor: status.filled === status.total ? '#defbe6' : '#f4f4f4',
-        borderRadius: '4px',
-      }}>
+      <div 
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 'var(--cds-spacing-03)',
+          padding: 'var(--cds-spacing-04) var(--cds-spacing-05)',
+          backgroundColor: status.filled === status.total ? '#defbe6' : '#f4f4f4',
+          borderRadius: '4px',
+        }}
+      >
         {status.filled === status.total ? (
-          <Checkmark size={16} style={{ color: '#198038' }} />
+          <Checkmark size={16} style={{ color: '#198038' }} aria-hidden="true" />
         ) : (
-          <Information size={16} style={{ color: '#525252' }} />
+          <Information size={16} style={{ color: '#525252' }} aria-hidden="true" />
         )}
         <span style={{ 
           fontFamily: "'IBM Plex Sans', sans-serif",
@@ -134,12 +139,12 @@ function Step3Description({ formData, updateFormData }) {
       {/* AI Draft Generator */}
       {!formData.generatedContent && (
         <Tile style={{ backgroundColor: '#f4f4f4', border: '1px solid #e0e0e0' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-            <MagicWand size={24} style={{ color: '#0f62fe', flexShrink: 0 }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--cds-spacing-05)' }}>
+            <MagicWand size={24} style={{ color: '#0f62fe', flexShrink: 0 }} aria-hidden="true" />
             <div style={{ flex: 1 }}>
               <h4 style={{ 
                 fontFamily: "'IBM Plex Sans', sans-serif",
-                marginBottom: '0.5rem', 
+                marginBottom: 'var(--cds-spacing-03)', 
                 fontSize: '0.875rem', 
                 fontWeight: 600,
                 lineHeight: '18px',
@@ -153,7 +158,7 @@ function Step3Description({ formData, updateFormData }) {
                 lineHeight: '18px',
                 letterSpacing: '0.16px',
                 color: '#525252', 
-                marginBottom: '1rem' 
+                marginBottom: 'var(--cds-spacing-05)' 
               }}>
                 Let AI generate a draft based on your service type. The content will be filled in automatically for you to customize.
               </p>
@@ -197,7 +202,7 @@ function Step3Description({ formData, updateFormData }) {
       <Accordion>
         <AccordionItem 
           title={
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)' }}>
               <span>What's Included</span>
               {formData.whatsIncluded?.trim() && (
                 formData.generatedContent && formData.whatsIncluded === formData.generatedContent.whatsIncluded ? (
@@ -210,7 +215,7 @@ function Step3Description({ formData, updateFormData }) {
           }
           open
         >
-          <Stack gap={4} style={{ padding: '1rem 0' }}>
+          <Stack gap={4} style={{ padding: 'var(--cds-spacing-05) 0' }}>
             <p style={{ 
               fontFamily: "'IBM Plex Sans', sans-serif",
               fontSize: '0.875rem', 
@@ -223,7 +228,9 @@ function Step3Description({ formData, updateFormData }) {
             </p>
             <TextArea
               id="whats-included"
-              labelText=""
+              labelText="What's included in your service"
+              hideLabel
+              aria-label="What's included in your service"
               placeholder="Example:&#10;• Initial consultation&#10;• 2-hour deep cleaning session&#10;• All cleaning supplies included&#10;• Follow-up check after 24 hours"
               value={formData.whatsIncluded || ''}
               onChange={(e) => updateFormData('whatsIncluded', e.target.value)}
@@ -236,7 +243,7 @@ function Step3Description({ formData, updateFormData }) {
 
         <AccordionItem 
           title={
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)' }}>
               <span>Pricing & Availability</span>
               {formData.pricing?.trim() && formData.availability?.trim() && (
                 formData.generatedContent && 
@@ -250,7 +257,7 @@ function Step3Description({ formData, updateFormData }) {
             </div>
           }
         >
-          <Stack gap={4} style={{ padding: '1rem 0' }}>
+          <Stack gap={4} style={{ padding: 'var(--cds-spacing-05) 0' }}>
             <TextInput
               id="pricing"
               labelText="Pricing"
@@ -276,7 +283,7 @@ function Step3Description({ formData, updateFormData }) {
 
         <AccordionItem 
           title={
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)' }}>
               <span>Experience & Credentials</span>
               {formData.experience?.trim() && (
                 formData.generatedContent && formData.experience === formData.generatedContent.experience ? (
@@ -288,7 +295,7 @@ function Step3Description({ formData, updateFormData }) {
             </div>
           }
         >
-          <Stack gap={4} style={{ padding: '1rem 0' }}>
+          <Stack gap={4} style={{ padding: 'var(--cds-spacing-05) 0' }}>
             <p style={{ 
               fontFamily: "'IBM Plex Sans', sans-serif",
               fontSize: '0.875rem', 
@@ -301,7 +308,9 @@ function Step3Description({ formData, updateFormData }) {
             </p>
             <TextArea
               id="experience"
-              labelText=""
+              labelText="Experience and credentials"
+              hideLabel
+              aria-label="Experience and credentials"
               placeholder="Example:&#10;• 5 years of professional experience&#10;• Certified by [Organization]&#10;• Fully insured&#10;• Background checked"
               value={formData.experience || ''}
               onChange={(e) => updateFormData('experience', e.target.value)}

@@ -70,7 +70,7 @@ function Step4Review({ formData }) {
           fontSize: '1.25rem', 
           fontWeight: 400, 
           lineHeight: '28px',
-          marginBottom: '0.5rem' 
+          marginBottom: 'var(--cds-spacing-03)' 
         }}>
           Review your listing
         </h2>
@@ -87,41 +87,59 @@ function Step4Review({ formData }) {
       </div>
 
       {/* Quality Score */}
-      <Tile style={{ 
-        backgroundColor: qualityScore >= 75 ? '#defbe6' : qualityScore >= 50 ? '#fcf4d6' : '#fff1f1',
-        border: '1px solid',
-        borderColor: qualityScore >= 75 ? '#198038' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
-      }}>
+      <Tile 
+        role="region"
+        aria-label="Listing quality assessment"
+        style={{ 
+          backgroundColor: qualityScore >= 75 ? '#defbe6' : qualityScore >= 50 ? '#fcf4d6' : '#fff1f1',
+          border: '1px solid',
+          borderColor: qualityScore >= 75 ? '#198038' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
+        }}
+      >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h4 style={{ 
-              fontFamily: "'IBM Plex Sans', sans-serif",
-              marginBottom: '0.5rem', 
-              fontSize: '0.875rem', 
-              fontWeight: 600,
-              lineHeight: '18px',
-            }}>
+            <h4 
+              id="quality-score-heading"
+              style={{ 
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                marginBottom: 'var(--cds-spacing-03)', 
+                fontSize: '0.875rem', 
+                fontWeight: 600,
+                lineHeight: '18px',
+              }}
+            >
               Listing Quality Score
             </h4>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div 
+              role="list" 
+              aria-label="Quality check results"
+              style={{ display: 'flex', gap: 'var(--cds-spacing-03)', flexWrap: 'wrap' }}
+            >
               {qualityChecks.map((check, index) => (
                 <Tag 
                   key={index} 
                   type={check.passed ? 'green' : 'gray'}
                   size="sm"
+                  role="listitem"
                 >
-                  {check.passed ? <Checkmark size={12} /> : <Warning size={12} />}
-                  <span style={{ marginLeft: '4px' }}>{check.label}</span>
+                  {check.passed ? <Checkmark size={12} aria-hidden="true" /> : <Warning size={12} aria-hidden="true" />}
+                  <span style={{ marginLeft: 'var(--cds-spacing-02)' }}>
+                    {check.label}
+                    <span className="cds--visually-hidden">: {check.passed ? 'passed' : 'not passed'}</span>
+                  </span>
                 </Tag>
               ))}
             </div>
           </div>
-          <div style={{ 
-            fontSize: '2rem', 
-            fontWeight: 600, 
-            color: qualityScore >= 75 ? '#198038' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
-          }}>
-            {qualityScore}%
+          <div 
+            aria-labelledby="quality-score-heading"
+            style={{ 
+              fontSize: '2rem', 
+              fontWeight: 600, 
+              color: qualityScore >= 75 ? '#198038' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
+            }}
+          >
+            <span aria-label={`Quality score: ${qualityScore} percent`}>{qualityScore}%</span>
           </div>
         </div>
       </Tile>
@@ -131,7 +149,7 @@ function Step4Review({ formData }) {
         {/* Preview Header */}
         <div style={{ 
           backgroundColor: '#f4f4f4', 
-          padding: '0.75rem 1rem',
+          padding: 'var(--cds-spacing-04) var(--cds-spacing-05)',
           borderBottom: '1px solid #e0e0e0',
           display: 'flex',
           justifyContent: 'space-between',
@@ -152,9 +170,9 @@ function Step4Review({ formData }) {
         </div>
 
         {/* Preview Content */}
-        <div style={{ padding: '1.5rem' }}>
+        <div style={{ padding: 'var(--cds-spacing-06)' }}>
           {/* Category Tag */}
-          <Tag type="blue" size="sm" style={{ marginBottom: '0.75rem' }}>
+          <Tag type="blue" size="sm" style={{ marginBottom: 'var(--cds-spacing-04)' }}>
             {serviceCategories[formData.serviceCategory] || 'Service'}
           </Tag>
 
@@ -164,7 +182,7 @@ function Step4Review({ formData }) {
             fontSize: '1.25rem', 
             fontWeight: 600, 
             lineHeight: '28px',
-            marginBottom: '1rem',
+            marginBottom: 'var(--cds-spacing-05)',
             color: '#161616',
           }}>
             {formData.title || 'Your listing title will appear here'}
@@ -173,13 +191,13 @@ function Step4Review({ formData }) {
           {/* Quick Info */}
           <div style={{ 
             display: 'flex', 
-            gap: '1.5rem', 
-            marginBottom: '1.5rem',
+            gap: 'var(--cds-spacing-06)', 
+            marginBottom: 'var(--cds-spacing-06)',
             flexWrap: 'wrap',
           }}>
             {formData.pricing && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Currency size={16} style={{ color: '#525252' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)' }}>
+                <Currency size={16} style={{ color: '#525252' }} aria-hidden="true" />
                 <span style={{ 
                   fontFamily: "'IBM Plex Sans', sans-serif",
                   fontSize: '0.875rem', 
@@ -193,8 +211,8 @@ function Step4Review({ formData }) {
               </div>
             )}
             {formData.availability && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Time size={16} style={{ color: '#525252' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)' }}>
+                <Time size={16} style={{ color: '#525252' }} aria-hidden="true" />
                 <span style={{ 
                   fontFamily: "'IBM Plex Sans', sans-serif",
                   fontSize: '0.875rem', 
@@ -211,9 +229,9 @@ function Step4Review({ formData }) {
 
           {/* Description Preview */}
           {formData.whatsIncluded && (
-            <div style={{ marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <DocumentTasks size={16} style={{ color: '#0f62fe' }} />
+            <div style={{ marginBottom: 'var(--cds-spacing-05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)', marginBottom: 'var(--cds-spacing-03)' }}>
+                <DocumentTasks size={16} style={{ color: '#0f62fe' }} aria-hidden="true" />
                 <span style={{ 
                   fontFamily: "'IBM Plex Sans', sans-serif",
                   fontSize: '0.875rem', 
@@ -238,8 +256,8 @@ function Step4Review({ formData }) {
 
           {formData.experience && (
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <Certificate size={16} style={{ color: '#0f62fe' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)', marginBottom: 'var(--cds-spacing-03)' }}>
+                <Certificate size={16} style={{ color: '#0f62fe' }} aria-hidden="true" />
                 <span style={{ 
                   fontFamily: "'IBM Plex Sans', sans-serif",
                   fontSize: '0.875rem', 
@@ -278,12 +296,12 @@ function Step4Review({ formData }) {
             <StructuredListCell>Service Category</StructuredListCell>
             <StructuredListCell>
               <Tag type="green" size="sm">
-                <Checkmark size={12} />
-                <span style={{ marginLeft: '4px' }}>Complete</span>
+                <Checkmark size={12} aria-hidden="true" />
+                <span style={{ marginLeft: 'var(--cds-spacing-02)' }}>Complete</span>
               </Tag>
             </StructuredListCell>
             <StructuredListCell>
-              <Button kind="ghost" size="sm" renderIcon={Edit}>Edit</Button>
+              <Button kind="ghost" size="sm" renderIcon={Edit} aria-label="Edit service category">Edit</Button>
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -291,15 +309,15 @@ function Step4Review({ formData }) {
             <StructuredListCell>
               {formData.title ? (
                 <Tag type="green" size="sm">
-                  <Checkmark size={12} />
-                  <span style={{ marginLeft: '4px' }}>Complete</span>
+                  <Checkmark size={12} aria-hidden="true" />
+                  <span style={{ marginLeft: 'var(--cds-spacing-02)' }}>Complete</span>
                 </Tag>
               ) : (
                 <Tag type="red" size="sm">Missing</Tag>
               )}
             </StructuredListCell>
             <StructuredListCell>
-              <Button kind="ghost" size="sm" renderIcon={Edit}>Edit</Button>
+              <Button kind="ghost" size="sm" renderIcon={Edit} aria-label="Edit title">Edit</Button>
             </StructuredListCell>
           </StructuredListRow>
           <StructuredListRow>
@@ -307,15 +325,15 @@ function Step4Review({ formData }) {
             <StructuredListCell>
               {formData.whatsIncluded && formData.pricing ? (
                 <Tag type="green" size="sm">
-                  <Checkmark size={12} />
-                  <span style={{ marginLeft: '4px' }}>Complete</span>
+                  <Checkmark size={12} aria-hidden="true" />
+                  <span style={{ marginLeft: 'var(--cds-spacing-02)' }}>Complete</span>
                 </Tag>
               ) : (
                 <Tag type="gray" size="sm">Incomplete</Tag>
               )}
             </StructuredListCell>
             <StructuredListCell>
-              <Button kind="ghost" size="sm" renderIcon={Edit}>Edit</Button>
+              <Button kind="ghost" size="sm" renderIcon={Edit} aria-label="Edit description">Edit</Button>
             </StructuredListCell>
           </StructuredListRow>
         </StructuredListBody>

@@ -1,6 +1,24 @@
 // Carbon Design System Styles
 @use '@carbon/react';
 
+// Carbon Spacing Tokens as CSS Custom Properties
+// Reference: https://carbondesignsystem.com/elements/spacing/overview/
+:root {
+  --cds-spacing-01: 0.125rem;  /* 2px */
+  --cds-spacing-02: 0.25rem;   /* 4px */
+  --cds-spacing-03: 0.5rem;    /* 8px */
+  --cds-spacing-04: 0.75rem;   /* 12px */
+  --cds-spacing-05: 1rem;      /* 16px */
+  --cds-spacing-06: 1.5rem;    /* 24px */
+  --cds-spacing-07: 2rem;      /* 32px */
+  --cds-spacing-08: 2.5rem;    /* 40px */
+  --cds-spacing-09: 3rem;      /* 48px */
+  --cds-spacing-10: 4rem;      /* 64px */
+  --cds-spacing-11: 5rem;      /* 80px */
+  --cds-spacing-12: 6rem;      /* 96px */
+  --cds-spacing-13: 10rem;     /* 160px */
+}
+
 // Reset and base styles
 *,
 *::before,

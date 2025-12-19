@@ -4,7 +4,7 @@ function WizardStep({ children, isActive }) {
   }
 
   return (
-    <div className="wizard-step" style={{ padding: '2rem 0' }}>
+    <div className="wizard-step" style={{ padding: 'var(--cds-spacing-07) 0' }}>
       {children}
     </div>
   );

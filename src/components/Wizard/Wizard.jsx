@@ -27,6 +27,7 @@ function Wizard() {
   const [formData, setFormData] = useState({
     // Step 1: Service Type & Basics
     serviceCategory: '',
+    serviceLocation: 'Montreal, QC', // Default location from header
     serviceIntent: '',
     serviceOffering: '',
     // Step 2: Title
@@ -104,13 +105,14 @@ function Wizard() {
               hideCloseButton
               lowContrast
             />
-            <div style={{ marginTop: '2rem' }}>
+            <div style={{ marginTop: 'var(--cds-spacing-07)' }}>
               <Button
                 onClick={() => {
                   setIsSubmitted(false);
                   setCurrentStep(0);
                   setFormData({
                     serviceCategory: '',
+                    serviceLocation: 'Montreal, QC',
                     serviceIntent: '',
                     serviceOffering: '',
                     title: '',
@@ -134,31 +136,37 @@ function Wizard() {
   }
 
   return (
-    <div className="wizard-container">
+    <div className="wizard-container" role="form" aria-labelledby="wizard-title" aria-describedby="wizard-description">
       {/* Header Section */}
-      <div className="wizard-header" style={{ marginBottom: '2rem' }}>
-        <h1 style={{ 
-          fontFamily: "'IBM Plex Sans', sans-serif",
-          fontSize: '2rem', 
-          fontWeight: 400,
-          lineHeight: '40px',
-          marginBottom: '1rem' 
-        }}>
+      <div className="wizard-header" style={{ marginBottom: 'var(--cds-spacing-07)' }}>
+        <h1 
+          id="wizard-title"
+          style={{ 
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: '2rem', 
+            fontWeight: 400,
+            lineHeight: '40px',
+            marginBottom: 'var(--cds-spacing-05)' 
+          }}
+        >
           Post A Service
         </h1>
-        <p style={{ 
-          fontFamily: "'IBM Plex Sans', sans-serif",
-          color: '#161616', 
-          fontSize: '1.75rem',
-          fontWeight: 400,
-          lineHeight: '36px',
-        }}>
+        <p 
+          id="wizard-description"
+          style={{ 
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            color: '#161616', 
+            fontSize: '1.75rem',
+            fontWeight: 400,
+            lineHeight: '36px',
+          }}
+        >
           Let's start with the basics. You can refine this later.
         </p>
       </div>
 
       {/* Progress Indicator */}
-      <ProgressIndicator currentIndex={currentStep} spaceEqually style={{ marginBottom: '2.5rem' }}>
+      <ProgressIndicator currentIndex={currentStep} spaceEqually style={{ marginBottom: 'var(--cds-spacing-08)' }}>
         {steps.map((step, index) => (
           <ProgressStep
             key={index}
@@ -169,7 +177,13 @@ function Wizard() {
       </ProgressIndicator>
 
       {/* Step Content */}
-      <div className="wizard-content" style={{ minHeight: '400px' }}>
+      <div 
+        className="wizard-content" 
+        style={{ minHeight: '400px' }}
+        role="region"
+        aria-label={`Step ${currentStep + 1} of ${steps.length}: ${steps[currentStep].label}`}
+        aria-live="polite"
+      >
         <WizardStep isActive={currentStep === 0}>
           <Step1ServiceType formData={formData} updateFormData={updateFormData} />
         </WizardStep>
@@ -188,13 +202,14 @@ function Wizard() {
       </div>
 
       {/* Navigation Footer */}
-      <div
+      <nav
         className="wizard-footer"
+        aria-label="Wizard navigation"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginTop: '2rem',
-          paddingTop: '1rem',
+          marginTop: 'var(--cds-spacing-07)',
+          paddingTop: 'var(--cds-spacing-05)',
           borderTop: '1px solid #e0e0e0',
         }}
       >
@@ -220,7 +235,7 @@ function Wizard() {
             Next
           </Button>
         )}
-      </div>
+      </nav>
     </div>
   );
 }

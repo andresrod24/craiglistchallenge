@@ -165,7 +165,7 @@ function Step2TitleCreation({ formData, updateFormData }) {
           fontSize: '1.25rem', 
           fontWeight: 400, 
           lineHeight: '28px',
-          marginBottom: '0.5rem' 
+          marginBottom: 'var(--cds-spacing-03)' 
         }}>
           Create your listing title
         </h2>
@@ -184,17 +184,17 @@ function Step2TitleCreation({ formData, updateFormData }) {
       {/* AI Suggestions Section */}
       <div style={{ 
         backgroundColor: '#f4f4f4', 
-        padding: '1.5rem', 
+        padding: 'var(--cds-spacing-06)', 
         borderRadius: '4px',
         border: '1px solid #e0e0e0'
       }}>
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
-          gap: '0.5rem', 
-          marginBottom: '1rem' 
+          gap: 'var(--cds-spacing-03)', 
+          marginBottom: 'var(--cds-spacing-05)' 
         }}>
-          <MagicWand size={20} style={{ color: '#0f62fe' }} />
+          <MagicWand size={20} style={{ color: '#0f62fe' }} aria-hidden="true" />
           <span style={{ 
             fontFamily: "'IBM Plex Sans', sans-serif",
             fontWeight: 600, 
@@ -206,17 +206,20 @@ function Step2TitleCreation({ formData, updateFormData }) {
         </div>
 
         {isLoading ? (
-          <Stack gap={4}>
+          <Stack gap={4} aria-busy="true" aria-label="Loading AI suggestions">
             <SkeletonText heading width="80%" />
             <SkeletonText heading width="75%" />
             <SkeletonText heading width="85%" />
             <SkeletonText heading width="70%" />
+            <span className="cds--visually-hidden" role="status">Loading AI-suggested titles, please wait...</span>
           </Stack>
         ) : (
           <TileGroup
             name="title-suggestions"
             valueSelected={formData.selectedSuggestion}
             onChange={(value) => handleSuggestionSelect(value)}
+            legend="Select an AI-suggested title"
+            legendText="Select an AI-suggested title"
           >
             <Stack gap={3}>
               {suggestions.map((suggestion, index) => (
@@ -225,16 +228,16 @@ function Step2TitleCreation({ formData, updateFormData }) {
                   id={`suggestion-${index}`}
                   value={suggestion.title}
                   style={{
-                    padding: '1rem',
+                    padding: 'var(--cds-spacing-05)',
                     border: formData.selectedSuggestion === suggestion.title 
                       ? '2px solid #0f62fe' 
                       : '1px solid #c6c6c6',
                   }}
                 >
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)', marginBottom: 'var(--cds-spacing-03)' }}>
                       {formData.selectedSuggestion === suggestion.title && (
-                        <Checkmark size={16} style={{ color: '#0f62fe', flexShrink: 0 }} />
+                        <Checkmark size={16} style={{ color: '#0f62fe', flexShrink: 0 }} aria-hidden="true" />
                       )}
                       <span style={{ 
                         fontFamily: "'IBM Plex Sans', sans-serif",
@@ -252,7 +255,7 @@ function Step2TitleCreation({ formData, updateFormData }) {
                       letterSpacing: '0.32px',
                       color: '#525252', 
                       margin: 0,
-                      paddingLeft: formData.selectedSuggestion === suggestion.title ? '1.5rem' : '0',
+                      paddingLeft: formData.selectedSuggestion === suggestion.title ? 'var(--cds-spacing-06)' : '0',
                       fontStyle: 'italic',
                     }}>
                       {suggestion.rationale}
@@ -271,7 +274,7 @@ function Step2TitleCreation({ formData, updateFormData }) {
           lineHeight: '16px',
           letterSpacing: '0.32px',
           color: '#525252', 
-          marginTop: '1rem',
+          marginTop: 'var(--cds-spacing-05)',
         }}>
           These suggestions are optimized for search visibility and include your location 
           and key service details.
