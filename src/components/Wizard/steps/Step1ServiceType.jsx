@@ -15,6 +15,71 @@ import {
 } from '@carbon/react';
 import { Checkmark, Edit, Add } from '@carbon/icons-react';
 
+// ServiceCategoryCard component with hover state
+function ServiceCategoryCard({ category, isSelected, onSelect }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const getBackgroundColor = () => {
+    if (isSelected) {
+      return isHovered ? '#d0e2ff' : '#e5f0ff';
+    }
+    return isHovered ? '#e8e8e8' : 'white';
+  };
+
+  const getBorderColor = () => {
+    if (isSelected) {
+      return '#0f62fe';
+    }
+    return isHovered ? '#525252' : '#8d8d8d';
+  };
+
+  return (
+    <RadioTile
+      id={`category-${category.id}`}
+      value={category.id}
+      className="service-category-card"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        border: isSelected ? '2px solid #0f62fe' : `1px solid ${getBorderColor()}`,
+        backgroundColor: getBackgroundColor(),
+        padding: 'var(--cds-spacing-05)',
+        transition: 'all 0.15s ease',
+        cursor: 'pointer',
+      }}
+    >
+      <div>
+        <span 
+          style={{ 
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: '1rem', 
+            fontWeight: 600, 
+            lineHeight: '24px',
+            marginBottom: 'var(--cds-spacing-02)',
+            color: '#161616',
+            display: 'block',
+          }}
+        >
+          {category.title}
+        </span>
+        <span 
+          style={{ 
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: '0.875rem', 
+            fontWeight: 400,
+            lineHeight: '18px',
+            letterSpacing: '0.16px',
+            color: '#525252',
+            display: 'block',
+          }}
+        >
+          {category.description}
+        </span>
+      </div>
+    </RadioTile>
+  );
+}
+
 // Nearby city suggestions for quick selection
 const nearbyCities = [
   { id: 'montreal', label: 'Montreal, QC' },
@@ -351,50 +416,11 @@ function Step1ServiceType({ formData, updateFormData }) {
           }}
         >
           {serviceCategories.map((category) => (
-            <RadioTile
+            <ServiceCategoryCard
               key={category.id}
-              id={`category-${category.id}`}
-              value={category.id}
-              style={{
-                border: formData.serviceCategory === category.id 
-                  ? '2px solid #0f62fe' 
-                  : '1px solid #8d8d8d',
-                backgroundColor: formData.serviceCategory === category.id 
-                  ? '#e5f0ff' 
-                  : 'white',
-                padding: 'var(--cds-spacing-05)',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              <div>
-                <span 
-                  style={{ 
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                    fontSize: '1rem', 
-                    fontWeight: 600, 
-                    lineHeight: '24px',
-                    marginBottom: 'var(--cds-spacing-02)',
-                    color: '#161616',
-                    display: 'block',
-                  }}
-                >
-                  {category.title}
-                </span>
-                <span 
-                  style={{ 
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                    fontSize: '0.875rem', 
-                    fontWeight: 400,
-                    lineHeight: '18px',
-                    letterSpacing: '0.16px',
-                    color: '#525252',
-                    display: 'block',
-                  }}
-                >
-                  {category.description}
-                </span>
-              </div>
-            </RadioTile>
+              category={category}
+              isSelected={formData.serviceCategory === category.id}
+            />
           ))}
         </div>
       </TileGroup>

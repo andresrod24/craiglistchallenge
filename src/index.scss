@@ -43,3 +43,13 @@ body {
 .cds--header__name {
   padding-right: 0px;
 }
+
+// Service Category Cards - Focus state for accessibility
+// Hover states are handled in React component (ServiceCategoryCard)
+.service-category-card {
+  &:focus,
+  &:focus-within {
+    outline: 2px solid #0f62fe !important;
+    outline-offset: -2px !important;
+  }
+}
