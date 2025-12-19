@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { 
   Stack, 
-  TileGroup,
   RadioTile, 
   TextArea, 
   RadioButtonGroup, 
@@ -14,71 +13,6 @@ import {
   InlineNotification,
 } from '@carbon/react';
 import { Checkmark, Edit, Add } from '@carbon/icons-react';
-
-// ServiceCategoryCard component with hover state
-function ServiceCategoryCard({ category, isSelected, onSelect }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const getBackgroundColor = () => {
-    if (isSelected) {
-      return isHovered ? '#d0e2ff' : '#e5f0ff';
-    }
-    return isHovered ? '#e8e8e8' : 'white';
-  };
-
-  const getBorderColor = () => {
-    if (isSelected) {
-      return '#0f62fe';
-    }
-    return isHovered ? '#525252' : '#8d8d8d';
-  };
-
-  return (
-    <RadioTile
-      id={`category-${category.id}`}
-      value={category.id}
-      className="service-category-card"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        border: isSelected ? '2px solid #0f62fe' : `1px solid ${getBorderColor()}`,
-        backgroundColor: getBackgroundColor(),
-        padding: 'var(--cds-spacing-05)',
-        transition: 'all 0.15s ease',
-        cursor: 'pointer',
-      }}
-    >
-      <div>
-        <span 
-          style={{ 
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: '1rem', 
-            fontWeight: 600, 
-            lineHeight: '24px',
-            marginBottom: 'var(--cds-spacing-02)',
-            color: '#161616',
-            display: 'block',
-          }}
-        >
-          {category.title}
-        </span>
-        <span 
-          style={{ 
-            fontFamily: "'IBM Plex Sans', sans-serif",
-            fontSize: '0.875rem', 
-            fontWeight: 400,
-            lineHeight: '18px',
-            letterSpacing: '0.16px',
-            color: '#525252',
-            display: 'block',
-          }}
-        >
-          {category.description}
-        </span>
-      </div>
-    </RadioTile>
-  );
-}
 
 // Nearby city suggestions for quick selection
 const nearbyCities = [
@@ -107,6 +41,7 @@ function Step1ServiceType({ formData, updateFormData }) {
   const [showBasicsForm, setShowBasicsForm] = useState(false);
   const [showLocationSearch, setShowLocationSearch] = useState(false);
   const [locationSearchValue, setLocationSearchValue] = useState('');
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   // Default location from header (would come from user profile in real app)
   const defaultLocation = 'Montreal, QC';
@@ -401,13 +336,12 @@ function Step1ServiceType({ formData, updateFormData }) {
         aria-live="polite"
       />
 
-      <TileGroup
-        name="service-category"
-        valueSelected={formData.serviceCategory}
-        onChange={(value) => handleSelect(value)}
-        legend="Select a service category"
-        legendText="Select a service category"
+      <fieldset 
+        style={{ border: 'none', padding: 0, margin: 0 }}
+        role="radiogroup"
+        aria-labelledby="service-category-heading"
       >
+        <legend className="cds--visually-hidden">Select a service category</legend>
         <div
           style={{
             display: 'grid',
@@ -415,15 +349,76 @@ function Step1ServiceType({ formData, updateFormData }) {
             gap: 'var(--cds-spacing-05)',
           }}
         >
-          {serviceCategories.map((category) => (
-            <ServiceCategoryCard
-              key={category.id}
-              category={category}
-              isSelected={formData.serviceCategory === category.id}
-            />
-          ))}
+          {serviceCategories.map((category) => {
+            const isSelected = formData.serviceCategory === category.id;
+            const isHovered = hoveredCard === category.id;
+            
+            const getBackgroundColor = () => {
+              if (isSelected) {
+                return isHovered ? '#d0e2ff' : '#e5f0ff';
+              }
+              return isHovered ? '#e8e8e8' : 'white';
+            };
+
+            const getBorderColor = () => {
+              if (isSelected) {
+                return '#0f62fe';
+              }
+              return isHovered ? '#525252' : '#8d8d8d';
+            };
+
+            return (
+              <RadioTile
+                key={category.id}
+                id={`category-${category.id}`}
+                name="service-category"
+                value={category.id}
+                checked={isSelected}
+                onChange={() => handleSelect(category.id)}
+                className="service-category-card"
+                onMouseEnter={() => setHoveredCard(category.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                style={{
+                  border: isSelected ? '2px solid #0f62fe' : `1px solid ${getBorderColor()}`,
+                  backgroundColor: getBackgroundColor(),
+                  padding: 'var(--cds-spacing-05)',
+                  transition: 'all 0.15s ease',
+                  cursor: 'pointer',
+                }}
+              >
+                <div>
+                  <span 
+                    style={{ 
+                      fontFamily: "'IBM Plex Sans', sans-serif",
+                      fontSize: '1rem', 
+                      fontWeight: 600, 
+                      lineHeight: '24px',
+                      marginBottom: 'var(--cds-spacing-02)',
+                      color: '#161616',
+                      display: 'block',
+                    }}
+                  >
+                    {category.title}
+                  </span>
+                  <span 
+                    style={{ 
+                      fontFamily: "'IBM Plex Sans', sans-serif",
+                      fontSize: '0.875rem', 
+                      fontWeight: 400,
+                      lineHeight: '18px',
+                      letterSpacing: '0.16px',
+                      color: '#525252',
+                      display: 'block',
+                    }}
+                  >
+                    {category.description}
+                  </span>
+                </div>
+              </RadioTile>
+            );
+          })}
         </div>
-      </TileGroup>
+      </fieldset>
     </Stack>
   );
 }
