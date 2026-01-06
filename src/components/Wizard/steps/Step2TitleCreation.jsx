@@ -7,6 +7,8 @@ import {
   InlineNotification,
   Tag,
   SkeletonText,
+  AILabel,
+  AILabelContent,
 } from '@carbon/react';
 import { MagicWand, Checkmark } from '@carbon/icons-react';
 
@@ -194,7 +196,6 @@ function Step2TitleCreation({ formData, updateFormData }) {
           gap: 'var(--cds-spacing-03)', 
           marginBottom: 'var(--cds-spacing-05)' 
         }}>
-          <MagicWand size={20} style={{ color: '#0f62fe' }} aria-hidden="true" />
           <span style={{ 
             fontFamily: "'IBM Plex Sans', sans-serif",
             fontWeight: 600, 
@@ -202,17 +203,45 @@ function Step2TitleCreation({ formData, updateFormData }) {
             lineHeight: '24px',
             color: '#161616' 
           }}>AI-Suggested Titles</span>
-          <Tag type="blue" size="sm">Recommended</Tag>
+          <AILabel size="mini" aria-label="AI-generated title suggestions">
+            <AILabelContent>
+              <p style={{ 
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: '0.875rem',
+                lineHeight: '1.4',
+                margin: 0,
+              }}>
+                <strong>How these suggestions were generated</strong>
+              </p>
+              <p style={{ 
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: '0.75rem',
+                color: '#525252',
+                marginTop: 'var(--cds-spacing-03)',
+                marginBottom: 0,
+              }}>
+                These titles are generated based on your selected service category, location, and common search patterns. They are optimized for visibility and include trust signals that attract customers.
+              </p>
+            </AILabelContent>
+          </AILabel>
         </div>
 
         {isLoading ? (
-          <Stack gap={4} aria-busy="true" aria-label="Loading AI suggestions">
-            <SkeletonText heading width="80%" />
-            <SkeletonText heading width="75%" />
-            <SkeletonText heading width="85%" />
-            <SkeletonText heading width="70%" />
-            <span className="cds--visually-hidden" role="status">Loading AI-suggested titles, please wait...</span>
-          </Stack>
+          <div 
+            role="status" 
+            aria-busy="true" 
+            aria-label="Loading AI-suggested titles"
+          >
+            <Stack gap={4}>
+              <SkeletonText heading width="80%" />
+              <SkeletonText heading width="75%" />
+              <SkeletonText heading width="85%" />
+              <SkeletonText heading width="70%" />
+            </Stack>
+            <span className="cds--visually-hidden">
+              Please wait while AI generates title suggestions based on your service category...
+            </span>
+          </div>
         ) : (
           <TileGroup
             name="title-suggestions"
@@ -221,48 +250,56 @@ function Step2TitleCreation({ formData, updateFormData }) {
             legend="Select an AI-suggested title"
             legendText="Select an AI-suggested title"
           >
-            <Stack gap={3}>
-              {suggestions.map((suggestion, index) => (
-                <RadioTile
-                  key={index}
-                  id={`suggestion-${index}`}
-                  value={suggestion.title}
-                  style={{
-                    padding: 'var(--cds-spacing-05)',
-                    border: formData.selectedSuggestion === suggestion.title 
-                      ? '2px solid #0f62fe' 
-                      : '1px solid #c6c6c6',
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)', marginBottom: 'var(--cds-spacing-03)' }}>
-                      {formData.selectedSuggestion === suggestion.title && (
-                        <Checkmark size={16} style={{ color: '#0f62fe', flexShrink: 0 }} aria-hidden="true" />
-                      )}
-                      <span style={{ 
-                        fontFamily: "'IBM Plex Sans', sans-serif",
-                        fontSize: '0.875rem', 
-                        fontWeight: 400,
-                        lineHeight: '18px',
-                        letterSpacing: '0.16px',
-                      }}>{suggestion.title}</span>
+            <Stack gap={3} role="list" aria-label="AI-suggested titles">
+              {suggestions.map((suggestion, index) => {
+                const isSelected = formData.selectedSuggestion === suggestion.title;
+                return (
+                  <RadioTile
+                    key={index}
+                    id={`suggestion-${index}`}
+                    value={suggestion.title}
+                    aria-describedby={`suggestion-rationale-${index}`}
+                    style={{
+                      padding: 'var(--cds-spacing-05)',
+                      border: isSelected 
+                        ? '2px solid #0f62fe' 
+                        : '1px solid #c6c6c6',
+                    }}
+                  >
+                    <div role="listitem">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-03)', marginBottom: 'var(--cds-spacing-03)' }}>
+                        {isSelected && (
+                          <Checkmark size={16} style={{ color: '#0f62fe', flexShrink: 0 }} aria-hidden="true" />
+                        )}
+                        <span style={{ 
+                          fontFamily: "'IBM Plex Sans', sans-serif",
+                          fontSize: '0.875rem', 
+                          fontWeight: isSelected ? 600 : 400,
+                          lineHeight: '18px',
+                          letterSpacing: '0.16px',
+                        }}>{suggestion.title}</span>
+                      </div>
+                      <p 
+                        id={`suggestion-rationale-${index}`}
+                        style={{ 
+                          fontFamily: "'IBM Plex Sans', sans-serif",
+                          fontSize: '0.75rem', 
+                          fontWeight: 400,
+                          lineHeight: '16px',
+                          letterSpacing: '0.32px',
+                          color: '#525252', 
+                          margin: 0,
+                          paddingLeft: isSelected ? 'var(--cds-spacing-06)' : '0',
+                          fontStyle: 'italic',
+                        }}
+                      >
+                        <span className="cds--visually-hidden">Rationale: </span>
+                        {suggestion.rationale}
+                      </p>
                     </div>
-                    <p style={{ 
-                      fontFamily: "'IBM Plex Sans', sans-serif",
-                      fontSize: '0.75rem', 
-                      fontWeight: 400,
-                      lineHeight: '16px',
-                      letterSpacing: '0.32px',
-                      color: '#525252', 
-                      margin: 0,
-                      paddingLeft: formData.selectedSuggestion === suggestion.title ? 'var(--cds-spacing-06)' : '0',
-                      fontStyle: 'italic',
-                    }}>
-                      {suggestion.rationale}
-                    </p>
-                  </div>
-                </RadioTile>
-              ))}
+                  </RadioTile>
+                );
+              })}
             </Stack>
           </TileGroup>
         )}

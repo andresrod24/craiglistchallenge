@@ -8,6 +8,8 @@ import {
   StructuredListRow,
   StructuredListCell,
   StructuredListBody,
+  SkeletonText,
+  SkeletonPlaceholder,
 } from '@carbon/react';
 import { 
   Checkmark, 
@@ -17,6 +19,7 @@ import {
   Time,
   Certificate,
   DocumentTasks,
+  BuildingInsights_1 as BuildingIcon,
 } from '@carbon/icons-react';
 
 const serviceCategories = {
@@ -34,7 +37,101 @@ const serviceCategories = {
   'writing': 'Writing',
 };
 
-function Step4Review({ formData }) {
+function Step4Review({ formData, isBuilding }) {
+  // Show building/loading state
+  if (isBuilding) {
+    return (
+      <div
+        role="status"
+        aria-busy="true"
+        aria-live="polite"
+        aria-label="Building your listing preview, please wait"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '400px',
+          padding: 'var(--cds-spacing-07)',
+        }}
+      >
+        {/* Animated Building Icon */}
+        <div
+          style={{
+            marginBottom: 'var(--cds-spacing-06)',
+            animation: 'pulse 1.5s ease-in-out infinite',
+          }}
+        >
+          <BuildingIcon size={64} style={{ color: '#0f62fe' }} aria-hidden="true" />
+        </div>
+        
+        {/* Loading Message */}
+        <h3
+          style={{
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: '1.25rem',
+            fontWeight: 400,
+            lineHeight: '28px',
+            color: '#161616',
+            marginBottom: 'var(--cds-spacing-05)',
+            textAlign: 'center',
+          }}
+        >
+          Building your listing preview...
+        </h3>
+        
+        <p
+          style={{
+            fontFamily: "'IBM Plex Sans', sans-serif",
+            fontSize: '0.875rem',
+            fontWeight: 400,
+            lineHeight: '18px',
+            color: '#525252',
+            marginBottom: 'var(--cds-spacing-07)',
+            textAlign: 'center',
+          }}
+        >
+          Analyzing your content and preparing the preview
+        </p>
+
+        {/* Skeleton Preview */}
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '600px',
+            backgroundColor: '#ffffff',
+            borderRadius: '4px',
+            border: '1px solid #e0e0e0',
+            padding: 'var(--cds-spacing-05)',
+          }}
+        >
+          <SkeletonText heading width="40%" style={{ marginBottom: 'var(--cds-spacing-04)' }} />
+          <SkeletonText width="70%" style={{ marginBottom: 'var(--cds-spacing-03)' }} />
+          <SkeletonText width="85%" style={{ marginBottom: 'var(--cds-spacing-03)' }} />
+          <SkeletonText width="60%" style={{ marginBottom: 'var(--cds-spacing-05)' }} />
+          <div style={{ display: 'flex', gap: 'var(--cds-spacing-04)' }}>
+            <SkeletonPlaceholder style={{ width: '80px', height: '24px' }} />
+            <SkeletonPlaceholder style={{ width: '100px', height: '24px' }} />
+          </div>
+        </div>
+
+        {/* CSS Keyframe for pulse animation */}
+        <style>{`
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 1;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 0.6;
+              transform: scale(1.05);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   // Quality checks
   const qualityChecks = [
     {
@@ -51,6 +148,11 @@ function Step4Review({ formData }) {
       label: 'Service details',
       passed: !!formData.whatsIncluded?.trim(),
       suggestion: 'Describe what\'s included in your service',
+    },
+    {
+      label: 'Has photos',
+      passed: formData.photos?.length > 0,
+      suggestion: 'Add photos to increase visibility by 3x',
     },
     {
       label: 'Good scanability',
@@ -89,11 +191,11 @@ function Step4Review({ formData }) {
       {/* Quality Score */}
       <Tile 
         role="region"
-        aria-label="Listing quality assessment"
+        aria-label={`Listing quality assessment: Score is ${qualityScore} percent. ${qualityScore >= 75 ? 'Good quality listing.' : qualityScore >= 50 ? 'Fair quality listing. Consider improvements.' : 'Needs improvement.'}`}
         style={{ 
           backgroundColor: qualityScore >= 75 ? '#defbe6' : qualityScore >= 50 ? '#fcf4d6' : '#fff1f1',
           border: '1px solid',
-          borderColor: qualityScore >= 75 ? '#198038' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
+          borderColor: qualityScore >= 75 ? '#24a148' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -106,13 +208,14 @@ function Step4Review({ formData }) {
                 fontSize: '0.875rem', 
                 fontWeight: 600,
                 lineHeight: '18px',
+                color: qualityScore >= 75 ? '#0e6027' : qualityScore >= 50 ? '#161616' : '#750e13',
               }}
             >
               Listing Quality Score
             </h4>
             <div 
               role="list" 
-              aria-label="Quality check results"
+              aria-label={`Quality checks: ${passedChecks} of ${qualityChecks.length} passed`}
               style={{ display: 'flex', gap: 'var(--cds-spacing-03)', flexWrap: 'wrap' }}
             >
               {qualityChecks.map((check, index) => (
@@ -121,25 +224,31 @@ function Step4Review({ formData }) {
                   type={check.passed ? 'green' : 'gray'}
                   size="sm"
                   role="listitem"
+                  title={check.passed ? `${check.label}: Passed` : `${check.label}: ${check.suggestion}`}
                 >
                   {check.passed ? <Checkmark size={12} aria-hidden="true" /> : <Warning size={12} aria-hidden="true" />}
                   <span style={{ marginLeft: 'var(--cds-spacing-02)' }}>
                     {check.label}
-                    <span className="cds--visually-hidden">: {check.passed ? 'passed' : 'not passed'}</span>
+                    <span className="cds--visually-hidden">
+                      : {check.passed ? 'passed' : `not passed. ${check.suggestion}`}
+                    </span>
                   </span>
                 </Tag>
               ))}
             </div>
           </div>
           <div 
-            aria-labelledby="quality-score-heading"
+            role="status"
+            aria-live="polite"
             style={{ 
               fontSize: '2rem', 
               fontWeight: 600, 
-              color: qualityScore >= 75 ? '#198038' : qualityScore >= 50 ? '#f1c21b' : '#da1e28',
+              color: qualityScore >= 75 ? '#0e6027' : qualityScore >= 50 ? '#8a6116' : '#750e13',
             }}
           >
-            <span aria-label={`Quality score: ${qualityScore} percent`}>{qualityScore}%</span>
+            <span aria-label={`Quality score: ${qualityScore} percent. ${qualityScore >= 75 ? 'Good' : qualityScore >= 50 ? 'Fair' : 'Needs improvement'}`}>
+              {qualityScore}%
+            </span>
           </div>
         </div>
       </Tile>
@@ -279,6 +388,67 @@ function Step4Review({ formData }) {
               </p>
             </div>
           )}
+
+          {/* Photos Gallery Preview */}
+          {formData.photos?.length > 0 && (
+            <div style={{ marginTop: 'var(--cds-spacing-05)' }}>
+              <span style={{ 
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: '0.875rem', 
+                fontWeight: 600,
+                lineHeight: '18px',
+                display: 'block',
+                marginBottom: 'var(--cds-spacing-03)',
+              }}>Photos ({formData.photos.length})</span>
+              <div 
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+                  gap: 'var(--cds-spacing-03)',
+                }}
+              >
+                {formData.photos.slice(0, 4).map((photo) => (
+                  <div
+                    key={photo.id}
+                    style={{
+                      aspectRatio: '1',
+                      borderRadius: '4px',
+                      overflow: 'hidden',
+                      border: '1px solid #e0e0e0',
+                    }}
+                  >
+                    <img
+                      src={photo.preview}
+                      alt={photo.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  </div>
+                ))}
+                {formData.photos.length > 4 && (
+                  <div
+                    style={{
+                      aspectRatio: '1',
+                      borderRadius: '4px',
+                      backgroundColor: '#e0e0e0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: "'IBM Plex Sans', sans-serif",
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      color: '#525252',
+                    }}
+                  >
+                    +{formData.photos.length - 4}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -334,6 +504,22 @@ function Step4Review({ formData }) {
             </StructuredListCell>
             <StructuredListCell>
               <Button kind="ghost" size="sm" renderIcon={Edit} aria-label="Edit description">Edit</Button>
+            </StructuredListCell>
+          </StructuredListRow>
+          <StructuredListRow>
+            <StructuredListCell>Photos</StructuredListCell>
+            <StructuredListCell>
+              {formData.photos?.length > 0 ? (
+                <Tag type="green" size="sm">
+                  <Checkmark size={12} aria-hidden="true" />
+                  <span style={{ marginLeft: 'var(--cds-spacing-02)' }}>{formData.photos.length} photo{formData.photos.length !== 1 ? 's' : ''}</span>
+                </Tag>
+              ) : (
+                <Tag type="gray" size="sm">Optional</Tag>
+              )}
+            </StructuredListCell>
+            <StructuredListCell>
+              <Button kind="ghost" size="sm" renderIcon={Edit} aria-label="Edit photos">Edit</Button>
             </StructuredListCell>
           </StructuredListRow>
         </StructuredListBody>

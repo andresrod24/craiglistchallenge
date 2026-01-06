@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   Stack, 
   RadioTile, 
+  TileGroup,
   TextArea, 
   RadioButtonGroup, 
   RadioButton,
@@ -118,33 +119,43 @@ function Step1ServiceType({ formData, updateFormData }) {
       </div>
 
         {/* Selected Category Display */}
-        <Tile style={{ 
-          backgroundColor: '#e5f0ff', 
-          border: '1px solid #0f62fe',
-          padding: 'var(--cds-spacing-05)',
-        }}>
+        <Tile 
+          role="region"
+          aria-label={`Selected service category: ${selectedCategory?.title}`}
+          style={{ 
+            backgroundColor: '#e5f0ff', 
+            border: '1px solid #0f62fe',
+            padding: 'var(--cds-spacing-05)',
+          }}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--cds-spacing-04)' }}>
               <Checkmark size={20} style={{ color: '#0f62fe' }} aria-hidden="true" />
               <div>
-                <span style={{ 
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: '0.75rem', 
-                  fontWeight: 400,
-                  lineHeight: '16px',
-                  letterSpacing: '0.32px',
-                  color: '#525252', 
-                  display: 'block' 
-                }}>
+                <span 
+                  id="selected-category-label"
+                  style={{ 
+                    fontFamily: "'IBM Plex Sans', sans-serif",
+                    fontSize: '0.75rem', 
+                    fontWeight: 400,
+                    lineHeight: '16px',
+                    letterSpacing: '0.32px',
+                    color: '#525252', 
+                    display: 'block' 
+                  }}
+                >
                   Service Category
                 </span>
-                <span style={{ 
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: '1rem', 
-                  fontWeight: 600, 
-                  lineHeight: '24px',
-                  color: '#161616' 
-                }}>
+                <span 
+                  id="selected-category-value"
+                  style={{ 
+                    fontFamily: "'IBM Plex Sans', sans-serif",
+                    fontSize: '1rem', 
+                    fontWeight: 600, 
+                    lineHeight: '24px',
+                    color: '#161616' 
+                  }}
+                >
                   {selectedCategory?.title}
                 </span>
               </div>
@@ -154,6 +165,7 @@ function Step1ServiceType({ formData, updateFormData }) {
               size="sm"
               renderIcon={Edit}
               onClick={handleChangeCategory}
+              aria-label={`Change service category from ${selectedCategory?.title}`}
             >
               Change
             </Button>
@@ -185,10 +197,10 @@ function Step1ServiceType({ formData, updateFormData }) {
                 size="lg"
               />
               
-              {/* City Suggestions as Tags */}
+              {/* City Suggestions as Accessible Buttons */}
               <div 
                 role="group" 
-                aria-label="Nearby cities"
+                aria-label="Quick city selection. Choose from nearby cities or use the search above."
                 style={{ 
                   display: 'flex', 
                   gap: 'var(--cds-spacing-04)', 
@@ -196,39 +208,60 @@ function Step1ServiceType({ formData, updateFormData }) {
                   alignItems: 'center',
                 }}
               >
-                {nearbyCities.map((city) => (
-                  <Tag
-                    key={city.id}
-                    type="outline"
-                    size="md"
-                    onClick={() => handleLocationSelect(city.label)}
-                    style={{ 
-                      cursor: 'pointer',
-                      border: '1px solid #161616',
-                      backgroundColor: formData.serviceLocation === city.label ? '#161616' : '#f4f4f4',
-                      color: formData.serviceLocation === city.label ? 'white' : '#161616',
-                    }}
-                  >
-                    {city.label}
-                  </Tag>
-                ))}
+                {nearbyCities.map((city) => {
+                  const isSelected = formData.serviceLocation === city.label;
+                  return (
+                    <button
+                      key={city.id}
+                      type="button"
+                      onClick={() => handleLocationSelect(city.label)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleLocationSelect(city.label);
+                        }
+                      }}
+                      aria-pressed={isSelected}
+                      aria-label={`Select ${city.label}${isSelected ? ' (currently selected)' : ''}`}
+                      style={{ 
+                        cursor: 'pointer',
+                        border: '1px solid #161616',
+                        backgroundColor: isSelected ? '#161616' : '#f4f4f4',
+                        color: isSelected ? 'white' : '#161616',
+                        padding: 'var(--cds-spacing-02) var(--cds-spacing-04)',
+                        borderRadius: '9999px',
+                        fontFamily: "'IBM Plex Sans', sans-serif",
+                        fontSize: '0.75rem',
+                        fontWeight: 400,
+                        lineHeight: '16px',
+                        letterSpacing: '0.32px',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {city.label}
+                    </button>
+                  );
+                })}
               </div>
 
-              {/* Enter a different city button */}
+              {/* Cancel location search button */}
               <div style={{ paddingTop: 'var(--cds-spacing-05)' }}>
                 <Button
                   kind="tertiary"
                   size="md"
                   renderIcon={Add}
                   onClick={handleCancelLocationSearch}
+                  aria-label="Cancel location search and keep current location"
                 >
-                  Enter a different city
+                  Keep current location
                 </Button>
               </div>
             </Stack>
           ) : (
             /* Default Mode - Returning User */
             <div 
+              role="group"
+              aria-label="Service location"
               style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -238,6 +271,7 @@ function Step1ServiceType({ formData, updateFormData }) {
               <Tag
                 type="high-contrast"
                 size="md"
+                aria-label={`Current location: ${formData.serviceLocation || defaultLocation}`}
                 style={{
                   backgroundColor: '#161616',
                   color: 'white',
@@ -245,18 +279,20 @@ function Step1ServiceType({ formData, updateFormData }) {
               >
                 {formData.serviceLocation || defaultLocation}
               </Tag>
-              <Link
+              <Button
+                kind="ghost"
+                size="sm"
                 onClick={handleChangeLocation}
+                aria-label={`Change service location from ${formData.serviceLocation || defaultLocation}`}
                 style={{ 
-                  cursor: 'pointer',
                   fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: '1rem',
+                  fontSize: '0.875rem',
                   fontWeight: 400,
-                  lineHeight: '22px',
+                  color: '#0f62fe',
                 }}
               >
                 Change Location
-              </Link>
+              </Button>
             </div>
           )}
         </div>
@@ -336,12 +372,13 @@ function Step1ServiceType({ formData, updateFormData }) {
         aria-live="polite"
       />
 
-      <fieldset 
-        style={{ border: 'none', padding: 0, margin: 0 }}
-        role="radiogroup"
+      <TileGroup
+        name="service-category"
+        valueSelected={formData.serviceCategory}
+        onChange={(value) => handleSelect(value)}
+        legend={<span className="cds--visually-hidden">Select a service category</span>}
         aria-labelledby="service-category-heading"
       >
-        <legend className="cds--visually-hidden">Select a service category</legend>
         <div
           style={{
             display: 'grid',
@@ -374,6 +411,7 @@ function Step1ServiceType({ formData, updateFormData }) {
                 name="service-category"
                 value={category.id}
                 checked={isSelected}
+                aria-label={`${category.title}: ${category.description}`}
                 onChange={() => handleSelect(category.id)}
                 className="service-category-card"
                 onMouseEnter={() => setHoveredCard(category.id)}
@@ -418,7 +456,7 @@ function Step1ServiceType({ formData, updateFormData }) {
             );
           })}
         </div>
-      </fieldset>
+      </TileGroup>
     </Stack>
   );
 }

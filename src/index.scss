@@ -53,3 +53,139 @@ body {
     outline-offset: -2px !important;
   }
 }
+
+// App Layout
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Main content area
+.main-content {
+  flex: 1;
+  padding-bottom: 64px; // Account for fixed footer
+}
+
+// Wizard Layout - Two Column
+.wizard-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+}
+
+// Vertical Stepper Sidebar
+.wizard-sidebar {
+  .cds--progress {
+    padding: 0;
+  }
+  
+  .cds--progress-step {
+    min-height: 48px;
+    padding: var(--cds-spacing-03) 0;
+  }
+  
+  .cds--progress-label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #161616;
+  }
+  
+  .cds--progress-step--current .cds--progress-label {
+    font-weight: 600;
+    color: #0f62fe;
+  }
+  
+  .cds--progress-step--complete .cds--progress-label {
+    color: #161616;
+  }
+}
+
+// Wizard Content Area
+.wizard-content-area {
+  overflow-y: auto;
+}
+
+// Fixed Footer Navigation
+.fixed-footer {
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Breadcrumb styling
+.breadcrumb-container {
+  .cds--breadcrumb {
+    padding: 0;
+  }
+  
+  .cds--link {
+    font-size: 0.875rem;
+    color: #0f62fe;
+    
+    &:hover {
+      color: #0043ce;
+    }
+  }
+}
+
+// Responsive Styles
+@media (max-width: 671px) {
+  // Mobile: Stack layout vertically
+  .wizard-layout {
+    flex-direction: column;
+  }
+  
+  .wizard-sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e0e0e0;
+    padding: var(--cds-spacing-04) !important;
+    
+    .cds--progress {
+      flex-direction: row;
+      overflow-x: auto;
+    }
+    
+    .cds--progress-step {
+      min-width: auto;
+      flex-shrink: 0;
+    }
+  }
+  
+  .wizard-content-area {
+    padding: var(--cds-spacing-05) !important;
+  }
+  
+  .fixed-footer {
+    padding: 0 var(--cds-spacing-04) !important;
+    
+    .cds--btn {
+      min-width: 100px !important;
+    }
+  }
+  
+  .page-header {
+    padding: var(--cds-spacing-05) var(--cds-spacing-04) !important;
+    
+    h1 {
+      font-size: 1.5rem !important;
+      line-height: 32px !important;
+    }
+  }
+}
+
+@media (min-width: 672px) and (max-width: 1055px) {
+  // Tablet: Narrower sidebar
+  .wizard-sidebar {
+    width: 200px !important;
+    min-width: 200px !important;
+  }
+}
+
+// Dark header link styling
+.app-header {
+  a {
+    text-decoration: none;
+  }
+}
