@@ -447,6 +447,9 @@ function Step1ServiceType({ formData, updateFormData }) {
                       letterSpacing: '0.16px',
                       color: '#525252',
                       display: 'block',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     {category.description}

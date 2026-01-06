@@ -157,24 +157,23 @@ function App() {
             className="page-header"
             style={{
               padding: 'var(--cds-spacing-06) var(--cds-spacing-05)',
+              paddingLeft: '16px',
               backgroundColor: '#f4f4f4',
               borderBottom: '1px solid #e0e0e0',
             }}
           >
-            <div style={{ maxWidth: '1584px', margin: '0 auto' }}>
-              <h1 
-                style={{ 
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: '2rem', 
-                  fontWeight: 400,
-                  lineHeight: '40px',
-                  marginBottom: 'var(--cds-spacing-03)',
-                  color: '#161616',
-                }}
-              >
-                Post A Service
-              </h1>
-            </div>
+            <h1 
+              style={{ 
+                fontFamily: "'IBM Plex Sans', sans-serif",
+                fontSize: '2rem', 
+                fontWeight: 400,
+                lineHeight: '40px',
+                marginBottom: 'var(--cds-spacing-03)',
+                color: '#161616',
+              }}
+            >
+              Post A Service
+            </h1>
           </div>
         )}
 

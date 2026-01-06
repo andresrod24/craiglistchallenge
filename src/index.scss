@@ -167,6 +167,7 @@ body {
   
   .page-header {
     padding: var(--cds-spacing-05) var(--cds-spacing-04) !important;
+    padding-left: var(--cds-spacing-04) !important; // Reset to normal padding on mobile
     
     h1 {
       font-size: 1.5rem !important;
@@ -180,6 +181,10 @@ body {
   .wizard-sidebar {
     width: 200px !important;
     min-width: 200px !important;
+  }
+  
+  .page-header {
+    padding-left: calc(200px + var(--cds-spacing-05)) !important; // Align with narrower sidebar
   }
 }
 
