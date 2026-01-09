@@ -157,7 +157,6 @@ function App() {
             className="page-header"
             style={{
               padding: 'var(--cds-spacing-06) var(--cds-spacing-05)',
-              paddingLeft: '16px',
               backgroundColor: '#f4f4f4',
               borderBottom: '1px solid #e0e0e0',
             }}

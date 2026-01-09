@@ -26,13 +26,29 @@ import Step3Description from './steps/Step3Description';
 import Step4Review from './steps/Step4Review';
 
 const steps = [
-  { label: 'Basic Info.', secondaryLabel: '' },
+  { label: 'Basic Info', secondaryLabel: '' },
   { label: 'Create Title', secondaryLabel: '' },
-  { label: 'Describe Listing', secondaryLabel: '' },
-  { label: 'Preview Listing', secondaryLabel: '' },
+  { label: 'Describe', secondaryLabel: '' },
+  { label: 'Preview', secondaryLabel: '' },
 ];
 
+// Hook to detect mobile viewport for responsive layout
+const useIsMobile = (breakpoint = 671) => {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth <= breakpoint : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= breakpoint);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [breakpoint]);
+
+  return isMobile;
+};
+
 function Wizard({ currentStep, setCurrentStep, onCanProceedChange, isSubmitted, setIsSubmitted }) {
+  const isMobile = useIsMobile();
   const [isBuilding, setIsBuilding] = useState(false);
   const [previousStep, setPreviousStep] = useState(currentStep);
   
@@ -445,7 +461,7 @@ function Wizard({ currentStep, setCurrentStep, onCanProceedChange, isSubmitted, 
       >
         <ProgressIndicator 
           currentIndex={currentStep} 
-          vertical
+          vertical={!isMobile}
           style={{ width: '100%' }}
         >
           {steps.map((step, index) => {

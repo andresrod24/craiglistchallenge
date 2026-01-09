@@ -105,6 +105,12 @@ body {
 // Wizard Content Area
 .wizard-content-area {
   overflow-y: auto;
+  
+  // Ensure InlineNotification spans full width
+  .cds--inline-notification {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 // Fixed Footer Navigation
@@ -114,8 +120,13 @@ body {
 
 // Breadcrumb styling
 .breadcrumb-container {
+  white-space: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  
   .cds--breadcrumb {
     padding: 0;
+    flex-wrap: nowrap;
   }
   
   .cds--link {
@@ -140,16 +151,30 @@ body {
     min-width: 100% !important;
     border-right: none !important;
     border-bottom: 1px solid #e0e0e0;
-    padding: var(--cds-spacing-04) !important;
+    padding: var(--cds-spacing-04) var(--cds-spacing-05) !important;
+    background-color: #ffffff;
     
+    // Horizontal progress indicator spans full width with proper alignment
     .cds--progress {
-      flex-direction: row;
-      overflow-x: auto;
+      width: 100%;
+      justify-content: space-between;
     }
     
+    // Ensure steps distribute evenly
     .cds--progress-step {
-      min-width: auto;
-      flex-shrink: 0;
+      flex: 1;
+      max-width: none;
+    }
+    
+    // Compact labels for mobile
+    .cds--progress-label {
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+    
+    .cds--progress-step--current .cds--progress-label {
+      font-weight: 600;
+      color: #0f62fe;
     }
   }
   
@@ -184,7 +209,14 @@ body {
   }
   
   .page-header {
-    padding-left: calc(200px + var(--cds-spacing-05)) !important; // Align with narrower sidebar
+    padding-left: var(--cds-spacing-05) !important; // Consistent padding across breakpoints
+  }
+}
+
+@media (min-width: 1056px) {
+  // Desktop: Consistent padding for page header
+  .page-header {
+    padding-left: var(--cds-spacing-05) !important;
   }
 }
 
