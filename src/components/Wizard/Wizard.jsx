@@ -32,6 +32,26 @@ const steps = [
   { label: 'Preview', secondaryLabel: '' },
 ];
 
+const initialFormData = {
+  // Step 1: Service Type & Basics
+  serviceCategory: '',
+  serviceLocation: 'Montreal, QC', // Default location from header
+  serviceIntent: '',
+  serviceOffering: '',
+  // Step 2: Title
+  title: '',
+  selectedSuggestion: null,
+  // Step 3: Description
+  whatsIncluded: '',
+  pricing: '',
+  availability: '',
+  experience: '',
+  photos: [], // Array of uploaded photo objects { id, name, preview }
+  // Track AI-generated content for modification requirement
+  generatedContent: null,
+  hasModifiedContent: false,
+};
+
 // Hook to detect mobile viewport for responsive layout
 const useIsMobile = (breakpoint = 671) => {
   const [isMobile, setIsMobile] = useState(
@@ -47,30 +67,12 @@ const useIsMobile = (breakpoint = 671) => {
   return isMobile;
 };
 
-function Wizard({ currentStep, setCurrentStep, onCanProceedChange, isSubmitted, setIsSubmitted }) {
+function Wizard({ currentStep, setCurrentStep, onCanProceedChange, isSubmitted, setIsSubmitted, resetKey }) {
   const isMobile = useIsMobile();
   const [isBuilding, setIsBuilding] = useState(false);
   const [previousStep, setPreviousStep] = useState(currentStep);
   
-  const [formData, setFormData] = useState({
-    // Step 1: Service Type & Basics
-    serviceCategory: '',
-    serviceLocation: 'Montreal, QC', // Default location from header
-    serviceIntent: '',
-    serviceOffering: '',
-    // Step 2: Title
-    title: '',
-    selectedSuggestion: null,
-    // Step 3: Description
-    whatsIncluded: '',
-    pricing: '',
-    availability: '',
-    experience: '',
-    photos: [], // Array of uploaded photo objects { id, name, preview }
-    // Track AI-generated content for modification requirement
-    generatedContent: null,
-    hasModifiedContent: false,
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -106,6 +108,15 @@ function Wizard({ currentStep, setCurrentStep, onCanProceedChange, isSubmitted, 
   useEffect(() => {
     onCanProceedChange(canProceed());
   }, [formData, currentStep]);
+
+  // Reset wizard form state when cancel is triggered
+  useEffect(() => {
+    if (resetKey !== undefined) {
+      setFormData(initialFormData);
+      setIsBuilding(false);
+      setPreviousStep(0);
+    }
+  }, [resetKey]);
 
   // Trigger building animation when entering Step 4 (Preview) from Step 3 (Describe)
   useEffect(() => {
@@ -346,21 +357,7 @@ function Wizard({ currentStep, setCurrentStep, onCanProceedChange, isSubmitted, 
                   onClick={() => {
                     setIsSubmitted(false);
                     setCurrentStep(0);
-                    setFormData({
-                      serviceCategory: '',
-                      serviceLocation: 'Montreal, QC',
-                      serviceIntent: '',
-                      serviceOffering: '',
-                      title: '',
-                      selectedSuggestion: null,
-                      whatsIncluded: '',
-                      pricing: '',
-                      availability: '',
-                      experience: '',
-                      photos: [],
-                      generatedContent: null,
-                      hasModifiedContent: false,
-                    });
+                    setFormData(initialFormData);
                   }}
                 style={{
                   display: 'flex',

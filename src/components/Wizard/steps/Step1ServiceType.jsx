@@ -13,7 +13,7 @@ import {
   Link,
   InlineNotification,
 } from '@carbon/react';
-import { Checkmark, Edit, Add } from '@carbon/icons-react';
+import { Checkmark, Edit, Add, RadioButton as RadioButtonIcon, RadioButtonChecked as RadioButtonCheckedIcon } from '@carbon/icons-react';
 
 // Nearby city suggestions for quick selection
 const nearbyCities = [
@@ -425,6 +425,7 @@ function Step1ServiceType({ formData, updateFormData }) {
                 }}
               >
                 <div>
+                  <div>
                   <span 
                     style={{ 
                       fontFamily: "'IBM Plex Sans', sans-serif",
@@ -453,6 +454,17 @@ function Step1ServiceType({ formData, updateFormData }) {
                     }}
                   >
                     {category.description}
+                  </span>
+                  </div>
+                  <span
+                    aria-hidden="true"
+                    className="service-category-radio"
+                    style={{
+                      color: isSelected ? '#0f62fe' : '#525252',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {isSelected ? <RadioButtonCheckedIcon size={20} /> : <RadioButtonIcon size={20} />}
                   </span>
                 </div>
               </RadioTile>

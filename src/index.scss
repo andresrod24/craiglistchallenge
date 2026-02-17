@@ -52,6 +52,17 @@ body {
     outline: 2px solid #0f62fe !important;
     outline-offset: -2px !important;
   }
+
+  .cds--tile-content {
+    padding-right: calc(var(--cds-spacing-05) + 20px);
+  }
+
+  .service-category-radio {
+    position: absolute;
+    top: var(--cds-spacing-05);
+    right: var(--cds-spacing-05);
+    pointer-events: none;
+  }
 }
 
 // App Layout

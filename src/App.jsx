@@ -18,6 +18,7 @@ function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [canProceed, setCanProceed] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   const totalSteps = 4;
   const isLastStep = currentStep === totalSteps - 1;
@@ -39,6 +40,7 @@ function App() {
     // Navigate to home - reset wizard
     setCurrentStep(0);
     setIsSubmitted(false);
+    setResetKey((prev) => prev + 1);
   };
 
   const handleSubmit = () => {
@@ -192,6 +194,7 @@ function App() {
             onCanProceedChange={setCanProceed}
             isSubmitted={isSubmitted}
             setIsSubmitted={setIsSubmitted}
+            resetKey={resetKey}
           />
         </main>
 
